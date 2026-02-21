@@ -282,37 +282,42 @@ function ManualUploadPage({
   return (
     <div className="animate-fade-in">
       <PageHeader title={PAGE_TITLES.manualUpload} onBack={() => nav("updateInventory")} />
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border bg-secondary">
-              <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Component</th>
-              <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Category</th>
-              <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">Current</th>
-              <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">New Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ALL_COMPONENTS.map((c, i) => (
-              <tr key={c.name} className={i % 2 === 0 ? "bg-card" : "bg-table-stripe"}>
-                <td className="px-4 py-2 font-mono">{c.name}</td>
-                <td className="px-4 py-2 text-muted-foreground">{c.category}</td>
-                <td className="px-4 py-2 text-right font-mono text-muted-foreground">{inventory[c.name]}</td>
-                <td className="px-4 py-2 text-right">
-                  <input
-                    type="number"
-                    min={0}
-                    value={values[c.name] ?? 0}
-                    onChange={(e) =>
-                      setValues((v) => ({ ...v, [c.name]: Math.max(0, parseInt(e.target.value) || 0) }))
-                    }
-                    className="w-20 rounded-md border border-input bg-background px-2 py-1 text-right font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="space-y-6">
+        {Object.entries(CATEGORIES).map(([category, parts]) => (
+          <div key={category}>
+            <h2 className="mb-2 text-lg font-bold font-mono text-primary">{category}</h2>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-secondary">
+                    <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Component</th>
+                    <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">Current</th>
+                    <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">New Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {parts.map((name, i) => (
+                    <tr key={name} className={i % 2 === 0 ? "bg-card" : "bg-table-stripe"}>
+                      <td className="px-4 py-2 font-mono">{name}</td>
+                      <td className="px-4 py-2 text-right font-mono text-muted-foreground">{inventory[name]}</td>
+                      <td className="px-4 py-2 text-right">
+                        <input
+                          type="number"
+                          min={0}
+                          value={values[name] ?? 0}
+                          onChange={(e) =>
+                            setValues((v) => ({ ...v, [name]: Math.max(0, parseInt(e.target.value) || 0) }))
+                          }
+                          className="w-20 rounded-md border border-input bg-background px-2 py-1 text-right font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
       </div>
       <button
         onClick={handleSubmit}

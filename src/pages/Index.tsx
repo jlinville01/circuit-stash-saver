@@ -192,40 +192,45 @@ function ViewInventoryPage({
   return (
     <div className="animate-fade-in">
       <PageHeader title={PAGE_TITLES.viewInventory} onBack={() => nav("home")} />
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border bg-secondary">
-              <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Component</th>
-              <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Category</th>
-              <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ALL_COMPONENTS.map((c, i) => {
-              const qty = inventory[c.name] ?? 0;
-              const isLow = qty <= 0;
-              return (
-                <tr
-                  key={c.name}
-                  className={
-                    isLow
-                      ? "bg-out-of-stock text-destructive-foreground"
-                      : i % 2 === 0
-                      ? "bg-card"
-                      : "bg-table-stripe"
-                  }
-                >
-                  <td className="px-4 py-2 font-mono">{c.name}</td>
-                  <td className="px-4 py-2 text-muted-foreground">{c.category}</td>
-                  <td className={`px-4 py-2 text-right font-mono font-bold ${isLow ? "text-destructive" : "text-primary"}`}>
-                    {qty}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="space-y-6">
+        {Object.entries(CATEGORIES).map(([category, parts]) => (
+          <div key={category}>
+            <h2 className="mb-2 text-lg font-bold font-mono text-primary">{category}</h2>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-secondary">
+                    <th className="px-4 py-3 text-left font-mono font-semibold text-secondary-foreground">Component</th>
+                    <th className="px-4 py-3 text-right font-mono font-semibold text-secondary-foreground">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {parts.map((name, i) => {
+                    const qty = inventory[name] ?? 0;
+                    const isLow = qty <= 0;
+                    return (
+                      <tr
+                        key={name}
+                        className={
+                          isLow
+                            ? "bg-out-of-stock text-destructive-foreground"
+                            : i % 2 === 0
+                            ? "bg-card"
+                            : "bg-table-stripe"
+                        }
+                      >
+                        <td className="px-4 py-2 font-mono">{name}</td>
+                        <td className={`px-4 py-2 text-right font-mono font-bold ${isLow ? "text-destructive" : "text-primary"}`}>
+                          {qty}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
